@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# gen 10 random transactions
+# gen 20 random transactions
 for i in {1..20}
 do 
     if [ $(($RANDOM % 2)) -eq 0 ] 

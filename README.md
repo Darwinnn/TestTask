@@ -13,7 +13,7 @@ To run the build locally you would need to do two things:
 1. `make up` - bootstraps two docker containers, the app itself and the database
 2. `make migrage-up seq=2` - runs migrations in the database (Uses [Go Migrate](https://github.com/golang-migrate/migrate/pulse) in docker)
 
-After that, the app should be up and running, listening for external requests on http://localhost:8008
+After that, the app should be up and running, listening for external requests on http://localhost:8080
 
 ## App structure
 ### Config
@@ -57,6 +57,7 @@ There's a simple bash script in the `testdata` directory which generates 20 rand
 1. App stores balance in `double` type in database, which is not perfect for storing billing data due to [accuracy problems](https://en.wikipedia.org/wiki/Floating-point_arithmetic#Accuracy_problems)
 2. If you run more than one copy of the app within one database, canceller workers may conflict. 
 > I would use something like redis distlock to tell other copies not to touch the data when one of them already works on it
+> Or [postgres explicit locks](https://www.postgresql.org/docs/11/explicit-locking.html)
 
 3. The canceller worker corrects balance in a for loop, resulting in unnecessary load on database (and increased time). The same can be done with a single query using [CTEs](https://www.postgresql.org/docs/11/queries-with.html), which would probably work way faster. I decided not to do it, since it's basically hiding bussiness logic in the database. The query could be something like this:
 ```sql
