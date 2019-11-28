@@ -1,7 +1,6 @@
 CREATE TABLE IF NOT EXISTS balances (
     id SERIAL PRIMARY KEY,
-    value double precision NOT NULL,
-    CONSTRAINT balances_value_check CHECK ((value >= (0.0)::double precision))
+    value double precision NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS transactions (

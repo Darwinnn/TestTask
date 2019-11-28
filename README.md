@@ -33,13 +33,13 @@ App serves swagger.json (for swagger UI) on `/swagger.json`
 #### Routes
 App accepts POST requests on `/api/v1/state` URI, with json body like so:
 ```json
-{"amount": string float, "state": string win or lost, "transactionId": string UUID}
+{"amount": "1.1", "state": "win", "transactionId": "UUID"}
 ```
 win states increase the balance to the specified amount, lost states decrease it. 
 
 ### Database structure
 Database has two tables to maintain its job:
-1. **balances** - stores a balance value and its ID (has **constraint** on value column, so the balance value never goes negative (`"balances_value_check" CHECK (value >= 0.0::double precision)`)
+1. **balances** - stores a balance value and its ID
 2. **transactions** - stores transactions, UUIDs, states and amounts (has **constraint** on UUID column, so we won't end up processing same transactionID more than once (`"transactions_uuid_key" UNIQUE CONSTRAINT, btree (uuid)`)
 
 `transactions` relates to `balances` thru `transactions.balance_id=balances.id`
@@ -52,6 +52,8 @@ GET `/health` returns 200 if the app is working correctly.
 
 ## Test data
 There's a simple bash script in the `testdata` directory which generates 20 random transactions (**requires** `genuuid` util)
+## Unit test
+`make test` bootstraps a testing db, migrations and runs unit tests
 
 # Thoughts 
 1. App stores balance in `double` type in database, which is not perfect for storing billing data due to [accuracy problems](https://en.wikipedia.org/wiki/Floating-point_arithmetic#Accuracy_problems)
