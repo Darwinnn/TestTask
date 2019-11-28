@@ -1,0 +1,1 @@
+INSERT INTO balances (id, value) VALUES (1, 1000);

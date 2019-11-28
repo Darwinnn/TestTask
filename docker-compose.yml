@@ -1,0 +1,20 @@
+version: '2'
+services: 
+  api:
+    build: .
+    container_name: testTask
+    ports:
+      - 8080:8080
+    environment: 
+      DB_CONN_STRING: user=test_task host=database password=postgres dbname=test_task sslmode=disable
+      T_MINUTES: 1
+      T_ODD_NUM: 10
+    depends_on: 
+      - database
+    restart: always
+  database:
+    image: postgres:11
+    environment: 
+      POSTGRES_USER: test_task
+    ports:
+      - 5432:5432

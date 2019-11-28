@@ -1,0 +1,66 @@
+swagger: '2.0'
+info:
+  version: 0.0.1
+  title: Test Task
+schemes:
+  - http
+basePath: /api/v1
+paths:
+  /state:
+    post:
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      operationId: postState
+      parameters:
+        - name: stateObj
+          in: body
+          schema:
+            $ref: "#/definitions/stateObj"
+          required: true
+        - name: Source-Type
+          in: header
+          type: string
+          enum: [game,server,payment]
+          required: true
+      responses:
+        200:
+          description: state updates
+          schema:
+            $ref: "#/definitions/stateObj"
+        default:
+          description: error message
+          schema:
+            $ref: "#/definitions/error"
+  /health:
+    get:
+      produces:
+        - text/plain
+      responses:
+        200:
+          description: "the app is healthy"
+definitions:
+  stateObj:
+    type: object
+    required: 
+      - state
+      - transactionId
+      - amount
+    properties:
+      state:
+        type: string
+        enum: [win,lost]
+      amount:
+        type: string
+      transactionId:
+        type: string
+        format: uuid
+  error:
+    type: object
+    properties:
+      reason:
+        type: string
+      code:
+        type: integer
+        format: int64
