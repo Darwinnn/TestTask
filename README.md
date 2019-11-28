@@ -2,6 +2,11 @@
 
 Application for processing the incoming requests from the 3d-party providers 
 
+## Prerequisite
+1. [Docker](https://www.docker.com/get-started)
+2. uuidgen (optionally) - part of the linux-utils and comes by default in MacOS too. Used to generate test data
+3. [go-swagger](https://github.com/go-swagger/go-swagger) (optionally) - to regenerate the code
+
 ## Run
 To run the build locally you would need to do two things:
 
