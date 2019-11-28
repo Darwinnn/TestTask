@@ -113,17 +113,10 @@ func (d *DBH) CancelTransactions(transactions []Transaction) error {
 	}
 
 	// correcting balances in a for loop
-	// start with lost transactions so we won't violate sql constrain balance check
 	for _, transaction := range transactions {
 		if transaction.State == "lost" {
 			err = d.addBalance(tx, transaction.BalanceID, transaction.Amount)
 		}
-		if err != nil {
-			tx.Rollback()
-			return fmt.Errorf("can't update balance: %w", err)
-		}
-	}
-	for _, transaction := range transactions {
 		if transaction.State == "win" {
 			err = d.subBalance(tx, transaction.BalanceID, transaction.Amount)
 		}
