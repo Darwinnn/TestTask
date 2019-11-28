@@ -22,6 +22,7 @@ type Transaction struct {
 	Amount    string `db:"amount"`
 	State     string `db:"state"`
 	BalanceID int    `db:"balance_id"`
+	Canceled  bool   `db:"canceled"`
 }
 
 type DB interface {
@@ -130,12 +131,10 @@ func (d *DBH) CancelTransactions(transactions []Transaction) error {
 }
 
 func (DBH) subBalance(tx *sqlx.Tx, balanceID int, amount string) error {
-	fmt.Println("del balance, sum:", amount)
 	_, err := tx.Exec(`UPDATE balances SET value=value-$1 WHERE id=$2`, amount, balanceID)
 	return err
 }
 func (DBH) addBalance(tx *sqlx.Tx, balanceID int, amount string) error {
-	fmt.Println("add balance, sum:", amount)
 	_, err := tx.Exec(`UPDATE balances SET value=value+$1 WHERE id=$2`, amount, balanceID)
 	return err
 }
