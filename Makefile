@@ -12,7 +12,11 @@ run:
 	$(BIN_DIR)/$(NAME)
 
 test:
-	GO_ENABLED=0 go test -v $(MAIN_PATH)/src
+	docker run -d --name testdb -e POSTGRES_USER=test_task_testdb -p "5432:5432" postgres:11
+	@sleep 5
+	docker run -v $(shell pwd)/migrations:/migrations --network host migrate/migrate -path=/migrations/ -database postgres://test_task_testdb:postgres@localhost:5432/test_task_testdb?sslmode=disable up 2
+	- GO_ENABLED=0 go test -v $(MAIN_PATH)/src/db
+	docker stop testdb && docker rm testdb
 
 generate:
 	swagger generate server --target $(MAIN_PATH)/src --exclude-main -A TestTask
